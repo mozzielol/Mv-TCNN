@@ -1,0 +1,14 @@
+verbose,epochs,replay_rate,threshold,save_to_file,num_centers,lamb,select_sample,conditional_train,conditional_prediction,same_initial,Task 0,Task 1,Task 2,Task 3,Task 4,Average
+False,20,0.1,,cifar_replay.csv,1,,False,False,True,True,0.5,0.0,0.0,0.0,0.0,0.1
+False,20,0.1,,cifar_replay.csv,1,,False,False,True,False,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,,False,False,True,True,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,,False,False,True,False,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,,False,False,False,True,0.0,0.0,0.0,0.0,0.5,0.1
+False,50,0.1,,cifar_replay.csv,1,,False,False,False,False,0.0,0.0,0.0,0.0,0.5,0.1
+False,50,0.1,,cifar_replay.csv,1,1,False,False,True,True,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,1,False,False,True,False,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,1,False,False,False,True,0.0,0.0,0.0,0.0,0.5,0.1
+False,50,0.1,,cifar_replay.csv,1,1,False,False,False,False,0.0,0.0,0.0,0.0,0.5,0.1
+False,50,0.1,,cifar_replay.csv,1,2,False,False,True,True,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,2,False,False,True,False,0.5,0.0,0.0,0.0,0.0,0.1
+False,50,0.1,,cifar_replay.csv,1,2,False,False,False,True,0.0,0.0,0.0,0.0,0.5,0.1

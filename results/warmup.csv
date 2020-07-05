@@ -1,0 +1,13 @@
+verbose,epochs,replay_rate,threshold,save_to_file,num_centers,lamb,select_sample,conditional_train,conditional_prediction,same_initial,memory_span,Task 0,Task 1,Task 2,Task 3,Task 4,Average
+False,10,0,,warmup.csv,5,,False,True,plain_prediction,False,,0.9673758865248226,0.0,0.0,0.0,0.0,0.19347517730496452
+False,10,0,,warmup.csv,5,,False,True,conditional_converse_prediction,False,,0.0,0.0,0.0,0.0,0.5032778618255169,0.10065557236510339
+False,10,0,,warmup.csv,5,,False,True,conditional_prediction,False,,0.9035460992907801,0.0,0.0432230522945571,0.9274924471299094,0.0,0.37485231974304933
+False,10,0,,warmup.csv,5,,False,True,contion_by_others,False,,0.024113475177304965,0.0,0.1472785485592316,0.9964753272910373,0.0,0.23357347020551478
+False,10,0,,warmup.csv,5,,False,True,converse_prediction,False,,0.0,0.0,0.0,0.0,0.5032778618255169,0.10065557236510339
+False,10,0,,warmup.csv,5,,False,True,plain_prediction,True,,0.9877068557919622,0.0,0.0,0.0,0.0,0.19754137115839243
+False,10,0,,warmup.csv,5,,False,True,conditional_converse_prediction,True,,0.0,0.0,0.0,0.0,0.6414523449319214,0.12829046898638427
+False,10,0,,warmup.csv,5,,False,True,conditional_prediction,True,,0.8316784869976359,0.0,0.0,0.8746223564954683,0.0,0.34126016869862086
+False,10,0,,warmup.csv,5,,False,True,contion_by_others,True,,0.12482269503546099,0.0,0.0,0.9979859013091642,0.0,0.22456171926892504
+False,10,0,,warmup.csv,5,,False,True,converse_prediction,True,,0.0,0.0,0.0,0.0,0.6414523449319214,0.12829046898638427
+False,10,0,,warmup.csv,5,,False,True,plain_prediction,False,,0.0,0.0,0.15795090715048027,0.0,0.0,0.03159018143009605
+False,10,0,,warmup.csv,5,,False,False,plain_prediction,False,,0.9541371158392435,0.0,0.0,0.0,0.0,0.1908274231678487
