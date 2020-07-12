@@ -32,16 +32,6 @@ class Load_data(object):
         elif data_name in ['timh']:
             from utils.data_utils import load_tihm
             (X_train, y_train), (X_test, y_test) = load_tihm()
-        # self.get_description([X_train,y_train,X_test,y_test])
-        elif data_name in ['cifar10']:
-            from datasets import cifar10
-            (X_train, y_train), (X_test, y_test) = cifar10.load_data()
-        elif data_name in ['cifar100']:
-            from datasets import cifar100
-            (X_train, y_train), (X_test, y_test) = cifar100.load_data()
-        elif data_name in ['mnist']:
-            from datasets import mnist
-            (X_train, y_train), (X_test, y_test) = mnist.load_data()
         else:
             dataset_obj = getattr(Datasets, data_name)
             (X_train, y_train), (X_test, y_test) = dataset_obj.load_data()

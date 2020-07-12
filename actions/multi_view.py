@@ -1,94 +1,49 @@
-import numpy as np
-from configuration import conf
-from models.model_definition import get_model_multi_view_models
 from keras.preprocessing.image import ImageDataGenerator
+from configuration import conf
+import numpy as np
 
 
-def rotate_grey_imgs(data, label, concat=True):
-    if conf.dataset_name == 'mnist':
-        img_shape = (data.shape[0], 28, 28, 1) if conf.is_conv else (data.shape[0], -1)
-        data = data.reshape(-1, 28, 28)
-    else:
-        img_shape = (data.shape[0], 32, 32, 3) if conf.is_conv else (data.shape[0], -1)
-        data = data.reshape(-1, 32, 32, 3)
-    rotated_data = []
-    rotated_label = [label]
+class Multi_view:
+    def __init__(self):
+        self.datagen = [
+            ImageDataGenerator(rotation_range=270),
+            ImageDataGenerator(featurewise_center=True),
+            ImageDataGenerator(featurewise_std_normalization=True),
+            ImageDataGenerator(zca_whitening=True, zca_epsilon=0.1),
+            ImageDataGenerator(width_shift_range=0.2),
+            ImageDataGenerator(height_shift_range=0.2),
+            ImageDataGenerator(horizontal_flip=True, vertical_flip=True),
+            ImageDataGenerator(zoom_range=0.15),
+            ImageDataGenerator(shear_range=0.15), ]
 
-    # Rotate
-    for k in range(4):
-        rotated_data.append(np.rot90(data, k=k, axes=(1, 2)).reshape(img_shape))
-        rotated_label.append(label)
-    rotated_data.append(data.reshape(img_shape))
+    def fit(self, x):
+        for gen in self.datagen:
+            gen.fit(x)
 
-    data = data.reshape(-1, 28, 28, 1) if conf.dataset_name == 'mnist' else data.reshape(-1, 32, 32, 3)
+    def flow(self, x, y):
+        augment_data = []
+        augment_label = []
+        for gen in self.datagen:
+            data, label = gen.flow(x, y, batch_size=conf.batch_size).next()
+            augment_data.append(data)
+            augment_label.append(label)
 
-    datagen = ImageDataGenerator(featurewise_center=True)
-    datagen.fit(data)
-    it = datagen.flow(data, label, batch_size=data.shape[0])
-    agu_data, agu_label = it.next()
-    rotated_data.append(agu_data.reshape(img_shape))
-    rotated_label.append(agu_label)
-
-    datagen = ImageDataGenerator(featurewise_std_normalization=True)
-    datagen.fit(data)
-    agu_data, agu_label = it.next()
-    rotated_data.append(agu_data.reshape(img_shape))
-    rotated_label.append(agu_label)
-
-    datagen = ImageDataGenerator(zca_whitening=True)
-    datagen.fit(data)
-    it = datagen.flow(data, label, batch_size=data.shape[0])
-    agu_data, agu_label = it.next()
-    rotated_data.append(agu_data.reshape(img_shape))
-    rotated_label.append(agu_label)
-    # Shift
-    datagen = ImageDataGenerator(width_shift_range=0.2)
-    it = datagen.flow(data, label, batch_size=data.shape[0])
-    agu_data, agu_label = it.next()
-    rotated_data.append(agu_data.reshape(img_shape))
-    rotated_label.append(agu_label)
-
-    datagen = ImageDataGenerator(height_shift_range=0.2)
-    it = datagen.flow(data, label, batch_size=data.shape[0])
-    agu_data, agu_label = it.next()
-    rotated_data.append(agu_data.reshape(img_shape))
-    rotated_label.append(agu_label)
-
-    datagen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
-    it = datagen.flow(data, label, batch_size=data.shape[0])
-    agu_data, agu_label = it.next()
-    rotated_data.append(agu_data.reshape(img_shape))
-    rotated_label.append(agu_label)
-
-    if concat:
-        return np.concatenate(rotated_data), np.concatenate(rotated_label)
-    return rotated_data, rotated_label
-
-
-def multi_view_train(data_loader, args):
-    epochs = args.epochs
-    verbose = args.verbose
-    replay_rate = args.replay_rate
-    select_sample = args.select_sample
-    thresholds = []
-    model_list = []
-    initial_weights = None
-    if args.same_initial:
-        model = get_model_multi_view_models(len(conf.task_labels[0]) if conf.multi_head else 10, args.num_centers)
-        initial_weights = model.get_weights()
-
-    for task_idx in range(conf.num_tasks):
-        model = get_model_multi_view_models(len(conf.task_labels[task_idx]) if conf.multi_head else 10, args.num_centers)
-        if task_idx==0:
-            print(model.summary())
-        if initial_weights is not None:
-            model.set_weights(initial_weights)
-        x, y = data_loader.sample(task_idx=task_idx, whole_set=True)
-        train_x, train_y = rotate_grey_imgs(x, y)
-        task_out = np.ones(train_y.shape[0])
-        # train_x.append(np.ones(x.shape[0]) * task_idx)
-        model.fit(train_x, {'task_output': task_out, 'clf_output': train_y}, epochs=epochs, verbose=verbose)
-        model_list.append(model)
-
-    return model_list, thresholds
-
+    def augment(self, x, y=None, concat=False, num_runs=10):
+        augment_data = [x]
+        augment_label = [y]
+        if y is None:
+            for _ in np.arange(num_runs):
+                for gen in self.datagen:
+                    data = gen.flow(x, batch_size=x.shape[0]).next()
+                    augment_data.append(data)
+            if concat:
+                return np.concatenate(augment_data)
+            return augment_data
+        for _ in np.arange(num_runs):
+            for gen in self.datagen:
+                data, label = gen.flow(x, y, batch_size=x.shape[0]).next()
+                augment_data.append(data)
+                augment_label.append(label)
+        if concat:
+            return np.concatenate(augment_data), np.concatenate(augment_label)
+        return augment_data, augment_label
