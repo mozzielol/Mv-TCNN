@@ -7,3 +7,5 @@ keras = 2.3.0
 
 To reproduce the results:
 ```python train.py```
+
+Edit the configuration in ```config/configuration/test.ini```
